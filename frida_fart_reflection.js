@@ -203,19 +203,19 @@ function dumpclass(classname) {
                         console.log(methods);
                         for (var i in methods) {
                             
-                            // dumpmethod(classname, methods[i]);
+                            dumpmethod(classname, methods[i]);
                         }
                         methods = loadclass.getDeclaredMethods();
                         for (var i in methods) {
                             dumpmethod(classname, methods[i]);
                         }
                     } catch (e) {
-                        //console.log("error", e);
+                        console.log("error", e);
                     }
 
                 },
                 onComplete: function () {
-                    //console.log("find  Classloader instance over");
+                    console.log("find  Classloader instance over");
                 }
             });
         });
@@ -240,20 +240,24 @@ function dealwithClassLoader(classloaderobj) {
                         var dexfileobj = Java.cast(dexElementobj.dexFile.value, dexfileclass);
                         const enumeratorClassNames = dexfileobj.entries();
                         while (enumeratorClassNames.hasMoreElements()) {
-    
                             var classname = enumeratorClassNames.nextElement().toString();
                             console.log("start loadclass->" + classname);
-                            var loadclass = classloaderobj.loadClass(classname);
-                            console.log("after loadclass->" + classname);
+                            try{
+                                var loadclass = classloaderobj.loadClass(classname);
+                                console.log("after loadclass->" + classname);
 
-                            var methods = loadclass.getDeclaredConstructors();
-                            for (var i in methods) {
-                                dealwithmethod(classname, methods[i]);
+                                var methods = loadclass.getDeclaredConstructors();
+                                for (var i in methods) {
+                                    dealwithmethod(classname, methods[i]);
+                                }
+    
+                                methods = loadclass.getDeclaredMethods();
+                                for (var i in methods) {
+                                    dealwithmethod(classname, methods[i]);
+                                }
                             }
-
-                            methods = loadclass.getDeclaredMethods();
-                            for (var i in methods) {
-                                dealwithmethod(classname, methods[i]);
+                            catch(e){
+                                console.log("error", e);
                             }
                         }
                     }
